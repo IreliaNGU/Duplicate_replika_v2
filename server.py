@@ -12,7 +12,7 @@ from web import run
 
 importlib.reload(sys)
 address = '0.0.0.0'  # 监听哪些网络  127.0.0.1是监听本机 0.0.0.0是监听整个网络
-port = 9999  # 监听自己的哪个端口
+port = 9998  # 监听自己的哪个端口
 buffsize = 1024  # 接收从客户端发来的数据的缓存区大小
 s = socket(AF_INET, SOCK_STREAM)
 s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -72,41 +72,6 @@ class TMSGObj:
     def getTextandclient(self):
         return self.TextMsg, self.clientsock, self.clientaddress
 
-
-# class Server(ThreadingMixIn, TCPServer): pass
-#
-# class Handler(StreamRequestHandler):
-#
-#     def handle(self):
-#         ConnectList.append(self.client_address)
-#         addr = self.request.getpeername()
-#         print('Got connection from', addr)
-#         logging.info('Got connection from', addr)
-#         self.login = self.request.recv(1024).strip()
-#         # 非法IP
-#         if (self.login != 'login'):
-#             logging.info('This is a illegal request.')
-#             # 加入黑名单
-#             return
-#         #新开一个监听线程用于得到Dialog线程发来的回复
-#
-#         # 接收并处理消息
-#         while True:
-#             recv = self.request.recv(1024)
-#             if recv:
-#                 self.msg = TMSGObj()
-#                 self.msg.setText(recv.strip())
-#                 self.msg.setIP(self.client_address[0])
-#                 # 加入消息队列
-#                 msg_queue.put(self.msg)
-#             else:
-#                 print('Client connection close.')
-#                 logging.info('Client connection close.')
-#                 ConnectList.remove(self.client_address)
-#                 break
-#         logging.info('Thank you for connecting.')
-
-
 class ClientThread(threading.Thread):
 
     def __init__(self, client_sock, client_address):
@@ -127,6 +92,7 @@ class ClientThread(threading.Thread):
         # 非法IP
         if login_flag != 'login':
             # 加入黑名单
+            print(str(login_flag))
             logging.info('This is a illegal request.')
             blackL = open(BlackList, "a+")
             logging.info("Write " + str(self.clientaddress[0]) + " to black list.")
@@ -140,6 +106,8 @@ class ClientThread(threading.Thread):
                 # 判断是否为退出信息
                 infos = recv.split('|', 1)
                 if infos[0] == '-1':
+                    print('Client connection close.')
+                    logging.info('Client connection close.')
                     ConnectList.remove(self.clientaddress)
                     break
                 elif infos[0] == '1':
@@ -198,8 +166,9 @@ class DialogThread(threading.Thread):
                 try:
                     driver = run.load_webpage()
                     self.setDriver(driver)
-                    run.login(self.email, self.password)
+                    run.login(self.driver,self.email, self.password)
                     self.state = THREAD_STATE.stFetch
+                    print('Operator is ready to fetch message.')
                     logging.info('Operator is ready to fetch message.')
                 except Exception as e:
                     logging.error('Operator error in stInit: ' + str(e))

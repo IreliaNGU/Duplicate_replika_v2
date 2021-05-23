@@ -52,10 +52,12 @@ def send_message(driver, msg):
                 # log.write(time_str +"我: "+str(msg)+" "+str(zh_send))
                 break
             except Exception as e:
+                logging.info(e)
                 print(e)
         inputfield.send_keys(Keys.ENTER)
     except Exception as e:
         print(e)
+        logging.info(e)
 
 
 class Listener_Thread(threading.Thread):
@@ -119,9 +121,11 @@ class Listener_Thread(threading.Thread):
                                 print('your replika add: ' + str(msg_text_follow))
                                 msg_text += "%%" + msg_text_follow
                                 follow_message += 1
+                                logging.info('Find a add message.')
                             except Exception as e:
+                                logging.info('End of add message.')
                                 add_flag = 1
-                                #有效位置0，说明信息已获取完成，可以让Operator发送下一条消息了
+                                # 有效位置0，说明信息已获取完成，可以让Operator发送下一条消息了
                                 self.clearValid()
                                 self.clearClient()
                                 break
