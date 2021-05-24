@@ -41,23 +41,21 @@ def send_message(driver, msg):
     print('now execute send_message.')
     print('msg: ' + str(msg))
     logging.info('you: ' + str(msg))
+    inputfield = driver.find_element_by_xpath('//*[@id="send-message-textarea"]')
     try:
-        inputfield = driver.find_element_by_xpath('//*[@id="send-message-textarea"]')
         time.sleep(1)
         while True:
             try:
                 zh_send = baidu_translate_Chinese_to_English(str(msg))
-                inputfield.send_keys(zh_send)
-                # time_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-                # log.write(time_str +"我: "+str(msg)+" "+str(zh_send))
                 break
             except Exception as e:
-                logging.info(e)
+                logging.info('1'+str(e))
                 print(e)
+        inputfield.send_keys(zh_send)
         inputfield.send_keys(Keys.ENTER)
     except Exception as e:
         print(e)
-        logging.info(e)
+        logging.info('2'+str(e))
 
 
 class Listener_Thread(threading.Thread):
@@ -119,7 +117,7 @@ class Listener_Thread(threading.Thread):
                                 msg_text_follow = msg_last.find_element_by_xpath(
                                     './div/div[' + str(follow_message) + ']/div[2]/div/span/span/span').text
                                 print('your replika add: ' + str(msg_text_follow))
-                                msg_text += "%%" + msg_text_follow
+                                msg_text += msg_text_follow + "%%"
                                 follow_message += 1
                                 logging.info('Find a add message.')
                             except Exception as e:
@@ -127,15 +125,15 @@ class Listener_Thread(threading.Thread):
                                 add_flag = 1
                                 # 有效位置0，说明信息已获取完成，可以让Operator发送下一条消息了
                                 self.clearValid()
-                                self.clearClient()
                                 break
                         if msg_text != '':
-                            zh_follow = baidu_translate_English_to_Chinese(str(msg_text))
+                            zh_follow = baidu_translate_English_to_Chinese(msg_text.strip('%%'))
                             print(zh_follow)
                             chat_log.write( "replika: " + str(msg_text).replace("%%", ""))
                             chat_log.write(" 翻译：" + str(zh_follow).replace("%%", "") + "\n")
                             if self.clientsock:
                                 self.clientsock.send(str(zh_follow).encode())
+                                self.clearClient()
                             else:
                                 logging.error('No clientsock.')
                 else:

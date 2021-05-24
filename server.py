@@ -15,6 +15,8 @@ address = '0.0.0.0'  # 监听哪些网络  127.0.0.1是监听本机 0.0.0.0是�
 port = 9998  # 监听自己的哪个端口
 buffsize = 1024  # 接收从客户端发来的数据的缓存区大小
 s = socket(AF_INET, SOCK_STREAM)
+#非阻塞
+s.setblocking(False)
 s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 s.bind((address, port))
 s.listen(5)  # 最大连接数
@@ -72,63 +74,62 @@ class TMSGObj:
     def getTextandclient(self):
         return self.TextMsg, self.clientsock, self.clientaddress
 
-class ClientThread(threading.Thread):
-
-    def __init__(self, client_sock, client_address):
-        threading.Thread.__init__(self)
-        self.clientsock = client_sock
-        self.clientaddress = client_address
-        self.msg = None
-        ConnectList.append(client_address)
-
-    def send2client(self, msg):
-        self.clientsock.send(msg.encode())
-
-    def getClientAddress(self):
-        return self.clientaddress
-
-    def run(self):
-        login_flag = self.clientsock.recv(1024).decode('utf-8')
-        # 非法IP
-        if login_flag != 'login':
-            # 加入黑名单
-            print(str(login_flag))
-            logging.info('This is a illegal request.')
-            blackL = open(BlackList, "a+")
-            logging.info("Write " + str(self.clientaddress[0]) + " to black list.")
-            blackL.write(str(self.clientaddress[0]) + '\n')
-            blackL.close()
-            return
-        # 接收并处理消息
-        while True:
-            recv = self.clientsock.recv(1024).decode('utf-8')
-            if recv:
-                # 判断是否为退出信息
-                infos = recv.split('|', 1)
-                if infos[0] == '-1':
-                    print('Client connection close.')
-                    logging.info('Client connection close.')
-                    ConnectList.remove(self.clientaddress)
-                    break
-                elif infos[0] == '1':
-                    self.msg = TMSGObj()
-                    self.msg.setText(infos[1])
-                    self.msg.setclient(self.clientsock, self.clientaddress)
-                    logging.info(
-                        'A new message is added to queue. ' + str(self.msg.getclientaddress()[0]) + ' content:' + str(
-                            self.msg.getText()))
-                    # 加入消息队列
-                    msg_queue.put(self.msg)
-                else:
-                    logging.error('login success but receive a unrecognized message.')
-            else:
-                print('Client connection close.')
-                logging.info('Client connection close.')
-                ConnectList.remove(self.clientaddress)
-                break
-        logging.info('Thank you for connecting.')
-
-
+# class ClientThread(threading.Thread):
+#
+#     def __init__(self, client_sock, client_address):
+#         threading.Thread.__init__(self)
+#         self.clientsock = client_sock
+#         self.clientaddress = client_address
+#         self.msg = None
+#         # ConnectList.append(client_address)
+#
+#     def send2client(self, msg):
+#         self.clientsock.send(msg.encode())
+#
+#     def getClientAddress(self):
+#         return self.clientaddress
+#
+#     def run(self):
+#         login_flag = self.clientsock.recv(1024).decode('utf-8')
+#         # 非法IP
+#         if login_flag != 'login':
+#             # 加入黑名单
+#             print(str(login_flag))
+#             logging.info('This is an illegal request.')
+#             blackL = open(BlackList, "a+")
+#             logging.info("Write " + str(self.clientaddress[0]) + " to black list.")
+#             blackL.write(str(self.clientaddress[0]) + '\n')
+#             blackL.close()
+#             return
+#         # 接收并处理消息
+#         while True:
+#             logging.info('Login in successfully.')
+#             recv = self.clientsock.recv(1024).decode('utf-8')
+#             if recv:
+#                 # 判断是否为退出信息
+#                 infos = recv.split('|', 1)
+#                 if infos[0] == '-1':
+#                     print('Client connection close.')
+#                     logging.info('Client connection close.')
+#                     # ConnectList.remove(self.clientaddress)
+#                     break
+#                 elif infos[0] == '1':
+#                     self.msg = TMSGObj()
+#                     self.msg.setText(infos[1])
+#                     self.msg.setclient(self.clientsock, self.clientaddress)
+#                     logging.info(
+#                         'A new message is added to queue. ' + str(self.msg.getclientaddress()[0]) + ' content:' + str(
+#                             self.msg.getText()))
+#                     # 加入消息队列
+#                     msg_queue.put(self.msg)
+#                 else:
+#                     logging.error('login success but receive a unrecognized message.')
+#             else:
+#                 print('Client connection close.')
+#                 logging.info('Client connection close.')
+#                 # ConnectList.remove(self.clientaddress)
+#                 break
+#         logging.info('Thank you for connecting.')
 class DialogThread(threading.Thread):
 
     def __init__(self):
@@ -233,9 +234,9 @@ class DialogThread(threading.Thread):
                     logging.info('Operator is preparing for retry on logging to replika.')
                     self.state = THREAD_STATE.stInit
 
-# 等待一段时间再处理下一条消息，因为若两条消息发得太快AI可能会认成同一条消息
-def waitBetweenMessage():
-    time.sleep(5)
+# # 等待一段时间再处理下一条消息，因为若两条消息发得太快AI可能会认成同一条消息
+# def waitBetweenMessage():
+#     time.sleep(5)
 
 
 if __name__ == "__main__":
@@ -247,25 +248,72 @@ if __name__ == "__main__":
         if len(ConnectList) > ConnectMax:
             logging.info('There are more than 10 connects now.')
             continue
-        clientsock, clientaddress = s.accept()
-        blackIP = 0
-        # 查看黑名单是否有这个IP,有的话直接close连接
-        bl = open(BlackList, 'r')
-        while True:
-            line = bl.readline()
-            if not line:
-                break
-            line = line.strip('\n')
-            if line == str(clientaddress[0]):
-                logging.info('Catch a bad IP: ' + str(clientaddress[0]))
-                clientsock.close()
-                blackIP = 1
-                break
-        bl.close()
-        if blackIP == 1:
-            continue
-        print('connect from:' + str(clientaddress))
-        logging.info('connect from:' + str(clientaddress))
-        client = ClientThread(clientsock, clientaddress)
-        client.start()
-        threads.append(client)
+        try:
+            clientsock, clientaddress = s.accept()
+        except:
+            pass
+        else:
+            blackIP = 0
+            # 查看黑名单是否有这个IP,有的话直接close连接
+            bl = open(BlackList, 'r')
+            while True:
+                line = bl.readline()
+                if not line:
+                    break
+                line = line.strip('\n')
+                if line == str(clientaddress[0]):
+                    logging.info('Catch a bad IP: ' + str(clientaddress[0]))
+                    clientsock.close()
+                    blackIP = 1
+                    break
+            bl.close()
+            if blackIP == 1:
+                continue
+            print('connect from:' + str(clientaddress))
+            logging.info('connect from:' + str(clientaddress))
+            clientsock.setblocking(False)
+            ConnectList.append((clientsock,clientaddress))
+        for clientsock,clientaddress in ConnectList:
+            try:
+                recvData = clientsock.recv(1024).decode('utf-8')
+            except:
+                pass
+            else:
+                if recvData:
+                    # 判断是否为退出信息
+                    infos = recvData.split('|', 1)
+                    if infos[0] == '-1':
+                        clientsock.close()
+                        ConnectList.remove((clientsock, clientaddress))
+                        logging.info("Client %s has closed due to exit code -1." % str(clientaddress))
+                    elif infos[0] == '1':
+                        msg = TMSGObj()
+                        msg.setText(infos[1])
+                        msg.setclient(clientsock, clientaddress)
+                        logging.info(
+                            'A new message is added to queue. ' + str(
+                                msg.getclientaddress()[0]) + ' content:' + str(
+                                msg.getText()))
+                        # 加入消息队列
+                        msg_queue.put(msg)
+                    elif infos[0] == '0':
+                         logging.info('This is a legal login request.')
+                         clientsock.send("success".encode())
+                    else:
+                        # 加入黑名单
+                        logging.info('This is an illegal request.')
+                        blackL = open(BlackList, "a+")
+                        logging.info("Write " + str(clientaddress[0]) + " to black list.")
+                        blackL.write(str(clientaddress[0]) + '\n')
+                        blackL.close()
+                        clientsock.close()
+                        ConnectList.remove((clientsock,clientaddress))
+                        logging.info("Client %s has closed due to illegal request." % str(clientaddress))
+                else:
+                    clientsock.close()
+                    ConnectList.remove((clientsock, clientaddress))
+                    logging.info("Client %s has closed due to exit client." % str(clientaddress))
+
+        # client = ClientThread(clientsock, clientaddress)
+        # client.start()
+        # threads.append(client)
