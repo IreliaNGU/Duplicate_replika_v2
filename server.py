@@ -4,6 +4,7 @@ import queue
 import sys
 import threading
 import time
+from datetime import  datetime
 from enum import Enum
 from socket import *
 from socketserver import TCPServer, ThreadingMixIn, StreamRequestHandler
@@ -74,62 +75,6 @@ class TMSGObj:
     def getTextandclient(self):
         return self.TextMsg, self.clientsock, self.clientaddress
 
-# class ClientThread(threading.Thread):
-#
-#     def __init__(self, client_sock, client_address):
-#         threading.Thread.__init__(self)
-#         self.clientsock = client_sock
-#         self.clientaddress = client_address
-#         self.msg = None
-#         # ConnectList.append(client_address)
-#
-#     def send2client(self, msg):
-#         self.clientsock.send(msg.encode())
-#
-#     def getClientAddress(self):
-#         return self.clientaddress
-#
-#     def run(self):
-#         login_flag = self.clientsock.recv(1024).decode('utf-8')
-#         # 非法IP
-#         if login_flag != 'login':
-#             # 加入黑名单
-#             print(str(login_flag))
-#             logging.info('This is an illegal request.')
-#             blackL = open(BlackList, "a+")
-#             logging.info("Write " + str(self.clientaddress[0]) + " to black list.")
-#             blackL.write(str(self.clientaddress[0]) + '\n')
-#             blackL.close()
-#             return
-#         # 接收并处理消息
-#         while True:
-#             logging.info('Login in successfully.')
-#             recv = self.clientsock.recv(1024).decode('utf-8')
-#             if recv:
-#                 # 判断是否为退出信息
-#                 infos = recv.split('|', 1)
-#                 if infos[0] == '-1':
-#                     print('Client connection close.')
-#                     logging.info('Client connection close.')
-#                     # ConnectList.remove(self.clientaddress)
-#                     break
-#                 elif infos[0] == '1':
-#                     self.msg = TMSGObj()
-#                     self.msg.setText(infos[1])
-#                     self.msg.setclient(self.clientsock, self.clientaddress)
-#                     logging.info(
-#                         'A new message is added to queue. ' + str(self.msg.getclientaddress()[0]) + ' content:' + str(
-#                             self.msg.getText()))
-#                     # 加入消息队列
-#                     msg_queue.put(self.msg)
-#                 else:
-#                     logging.error('login success but receive a unrecognized message.')
-#             else:
-#                 print('Client connection close.')
-#                 logging.info('Client connection close.')
-#                 # ConnectList.remove(self.clientaddress)
-#                 break
-#         logging.info('Thank you for connecting.')
 class DialogThread(threading.Thread):
 
     def __init__(self):
@@ -162,6 +107,7 @@ class DialogThread(threading.Thread):
         self.message = None
 
     def run(self):
+        global begin_time
         while True:
             if self.state == THREAD_STATE.stInit:
                 try:
@@ -171,13 +117,21 @@ class DialogThread(threading.Thread):
                     self.state = THREAD_STATE.stFetch
                     print('Operator is ready to fetch message.')
                     logging.info('Operator is ready to fetch message.')
+                    # 记录开始时间
+                    begin_time = datetime.now()
                 except Exception as e:
                     logging.error('Operator error in stInit: ' + str(e))
                     self.state = THREAD_STATE.stError
             elif self.state == THREAD_STATE.stFetch:
+
                 try:
                     while True:
                         if msg_queue.empty():
+                            cur_time = datetime.now()
+                            # 一个小时后重新启动浏览器
+                            if (cur_time - begin_time).seconds > 3600:
+                                self.state = THREAD_STATE.stError
+                                break
                             continue
                         else:
                             self.message = msg_queue.get()
