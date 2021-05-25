@@ -43,25 +43,50 @@ def send_message(driver, msg):
     logging.info('you: ' + str(msg))
     while True:
         try:
+            logging.info('1')
             inputfield = driver.find_element_by_xpath('//*[@id="send-message-textarea"]')
+            logging.info('2')
             break
         except:
+            logging.info('3')
             driver.save_screenshot('inputfield.png')
-            logging.info('Wow.')
+            logging.info('4')
+            try:
+                choose = driver.find_element_by_xpath(
+                    '//*[@class="ChatSelectWidget__SelectWidgetRoot-sc-1bl2evl-0 eyqYyI"]')
+                logging.info('10')
+                button = choose.find_element_by_xpath('./button[1]')
+                button.click()
+                logging.info('11')
+                time.sleep(1)
+            except:
+                logging.info('Auch.')
+                return -1
+
     try:
+        logging.info('5')
         time.sleep(1)
         while True:
             try:
+                logging.info('6')
                 zh_send = baidu_translate_Chinese_to_English(str(msg))
+                logging.info('7')
                 break
             except Exception as e:
-                logging.info('1'+str(e))
+                logging.info('8')
+                logging.info('1' + str(e))
                 print(e)
+        logging.info('9')
         inputfield.send_keys(zh_send)
+        logging.info('10')
         inputfield.send_keys(Keys.ENTER)
+        logging.info('11')
+        return 0
     except Exception as e:
+        logging.info('12')
         print(e)
-        logging.info('2'+str(e))
+        logging.info('2' + str(e))
+        return -1
 
 
 class Listener_Thread(threading.Thread):
@@ -73,7 +98,7 @@ class Listener_Thread(threading.Thread):
         self.driver = driver
         self.clientsock = None
 
-    def setClient(self,clientsock):
+    def setClient(self, clientsock):
         self.clientsock = clientsock
 
     def clearClient(self):
@@ -89,7 +114,7 @@ class Listener_Thread(threading.Thread):
         return self.valid
 
     def clearValid(self):
-        self.valid=0
+        self.valid = 0
 
     def getlog(self):
         return "chat.log"
@@ -100,7 +125,7 @@ class Listener_Thread(threading.Thread):
         add_flag = 0
         chat_log = open(self.getlog(), 'a')
         while self.flag:
-            #有效位为0，等待Operator将其置1
+            # 有效位为0，等待Operator将其置1
             if not self.valid:
                 continue
             try:
@@ -135,7 +160,7 @@ class Listener_Thread(threading.Thread):
                         if msg_text != '':
                             zh_follow = baidu_translate_English_to_Chinese(msg_text.strip('%%'))
                             print(zh_follow)
-                            chat_log.write( "replika: " + str(msg_text).replace("%%", ""))
+                            chat_log.write("replika: " + str(msg_text).replace("%%", ""))
                             chat_log.write(" 翻译：" + str(zh_follow).replace("%%", "") + "\n")
                             if self.clientsock:
                                 try:

@@ -115,10 +115,10 @@ class DialogThread(threading.Thread):
                     self.setDriver(driver)
                     run.login(self.driver,self.email, self.password)
                     self.state = THREAD_STATE.stFetch
+                    #记录第一次开始时间
+                    begin_time = datetime.now()
                     print('Operator is ready to fetch message.')
                     logging.info('Operator is ready to fetch message.')
-                    # 记录开始时间
-                    begin_time = datetime.now()
                 except Exception as e:
                     logging.error('Operator error in stInit: ' + str(e))
                     self.state = THREAD_STATE.stError
@@ -135,6 +135,8 @@ class DialogThread(threading.Thread):
                                 break
                             continue
                         else:
+                            # 更新开始时间
+                            begin_time = datetime.now()
                             self.message = msg_queue.get()
                             self.state = THREAD_STATE.stChat
                             msg_queue.task_done()
@@ -161,13 +163,19 @@ class DialogThread(threading.Thread):
                             break
                     logging.info('Now send the message from ' + str(
                         self.message.getclientaddress()[0]) + ' content:' + self.message.getText())
-                    run.send_message(self.driver, self.message.getText())
-                    #给监听线程设置clientsock和有效位
-                    self.getListenerThread().setClient(self.message.getclientsock())
-                    self.getListenerThread().setValid()
-                    self.state = THREAD_STATE.stFetch
+                    send_flag = run.send_message(self.driver, self.message.getText())
+                    if send_flag==0:
+                        #给监听线程设置clientsock和有效位
+                        self.getListenerThread().setClient(self.message.getclientsock())
+                        self.getListenerThread().setValid()
+                        self.state = THREAD_STATE.stFetch
+                    elif send_flag==-1:
+                        raise Exception('unfind error in send_message.')
                 except Exception as e:
                     logging.error('Operator error in stChat: ' + str(e))
+                    #给每个ConnectList中的连接发送服务器需要重启的信息，从而让APP稍后重试
+                    for connect in ConnectList:
+                        connect[0].send("2|server error.".encode())
                     self.state = THREAD_STATE.stError
             elif self.state == THREAD_STATE.stError:
                 logging.info('into stError.')
