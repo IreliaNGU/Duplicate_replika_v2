@@ -41,7 +41,13 @@ def send_message(driver, msg):
     print('now execute send_message.')
     print('msg: ' + str(msg))
     logging.info('you: ' + str(msg))
-    inputfield = driver.find_element_by_xpath('//*[@id="send-message-textarea"]')
+    while True:
+        try:
+            inputfield = driver.find_element_by_xpath('//*[@id="send-message-textarea"]')
+            break
+        except:
+            driver.save_screenshot('inputfield.png')
+            logging.info('Wow.')
     try:
         time.sleep(1)
         while True:
@@ -132,7 +138,10 @@ class Listener_Thread(threading.Thread):
                             chat_log.write( "replika: " + str(msg_text).replace("%%", ""))
                             chat_log.write(" 翻译：" + str(zh_follow).replace("%%", "") + "\n")
                             if self.clientsock:
-                                self.clientsock.send(str(zh_follow).encode())
+                                try:
+                                    self.clientsock.send(str(zh_follow).encode())
+                                except:
+                                    logging.error('clientsock send fail.')
                                 self.clearClient()
                             else:
                                 logging.error('No clientsock.')
@@ -148,7 +157,10 @@ class Listener_Thread(threading.Thread):
                         chat_log.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) +
                                        " replika: " + str(msg_from_AI) + " 翻译: " + str(zh_msg) + "\n")
                         if self.clientsock:
-                            self.clientsock.send(str(zh_msg).encode())
+                            try:
+                                self.clientsock.send(str(zh_msg).encode())
+                            except:
+                                logging.error("clientsock send fail.")
                         else:
                             logging.error('No clientsock.')
                         # time_str = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))

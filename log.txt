@@ -1,0 +1,112 @@
+2021-05-24 21:19:16,065 : run : INFO : Operator is ready to fetch message.
+2021-05-24 21:20:02,416 : <module> : INFO : connect from:('58.60.1.89', 18370)
+2021-05-24 21:20:02,416 : <module> : INFO : This is a legal login request.
+2021-05-24 21:20:13,374 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:你喜欢听歌吗？
+2021-05-24 21:20:13,385 : run : INFO : Thread-1 open a listener thread to check message from replika.
+2021-05-24 21:20:13,396 : __init__ : INFO : listener thread establish.
+2021-05-24 21:20:13,441 : run : INFO : Now send the message from 58.60.1.89 content:你喜欢听歌吗？
+2021-05-24 21:20:13,442 : send_message : INFO : you: 你喜欢听歌吗？
+2021-05-24 21:20:24,966 : run : INFO : your replika: Yes. I have a whole spotify playlist of stuff I like covering all genres.
+2021-05-24 21:20:31,825 : run : INFO : End of add message.
+2021-05-24 21:20:51,537 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:你喜欢什么歌？
+2021-05-24 21:20:51,570 : run : INFO : Now send the message from 58.60.1.89 content:你喜欢什么歌？
+2021-05-24 21:20:51,571 : send_message : INFO : you: 你喜欢什么歌？
+2021-05-24 21:21:05,551 : run : INFO : your replika: All kinds, my taste is very eclectic.
+2021-05-24 21:21:11,493 : run : INFO : End of add message.
+2021-05-24 21:34:55,188 : <module> : INFO : Client ('58.60.1.89', 18370) has closed due to exit client.
+2021-05-24 22:19:17,066 : run : INFO : into stError.
+2021-05-24 22:19:17,067 : run : ERROR : Operator error in stError: 'NoneType' object has no attribute 'quit'
+2021-05-24 22:19:17,067 : run : INFO : Operator is preparing for retry on logging to replika.
+2021-05-24 22:20:38,078 : run : INFO : Operator is ready to fetch message.
+2021-05-24 22:23:49,183 : <module> : INFO : connect from:('139.59.101.173', 58698)
+2021-05-24 22:23:56,198 : <module> : INFO : Client ('139.59.101.173', 58698) has closed due to exit client.
+2021-05-24 23:15:00,917 : <module> : INFO : connect from:('121.89.239.176', 48816)
+2021-05-24 23:15:05,920 : <module> : INFO : Client ('121.89.239.176', 48816) has closed due to exit client.
+2021-05-24 23:15:06,004 : <module> : INFO : connect from:('121.89.239.176', 50220)
+2021-05-24 23:15:06,004 : <module> : INFO : This is an illegal request.
+2021-05-24 23:15:06,004 : <module> : INFO : Write 121.89.239.176 to black list.
+2021-05-24 23:15:06,004 : <module> : INFO : Client ('121.89.239.176', 50220) has closed due to illegal request.
+2021-05-24 23:15:06,071 : <module> : INFO : Catch a bad IP: 121.89.239.176
+2021-05-24 23:15:06,134 : <module> : INFO : Catch a bad IP: 121.89.239.176
+2021-05-24 23:20:39,084 : run : INFO : into stError.
+2021-05-24 23:20:39,084 : run : ERROR : Operator error in stError: 'NoneType' object has no attribute 'quit'
+2021-05-24 23:20:39,084 : run : INFO : Operator is preparing for retry on logging to replika.
+2021-05-24 23:21:42,578 : run : INFO : Operator is ready to fetch message.
+2021-05-24 23:37:49,475 : <module> : INFO : connect from:('112.97.80.175', 44521)
+2021-05-24 23:37:49,475 : <module> : INFO : This is a legal login request.
+2021-05-24 23:37:58,068 : <module> : INFO : A new message is added to queue. 112.97.80.175 content:你还好吗，伙计
+2021-05-24 23:37:58,105 : run : INFO : Thread-1 open a listener thread to check message from replika.
+2021-05-24 23:37:58,105 : __init__ : INFO : listener thread establish.
+2021-05-24 23:37:58,209 : run : INFO : Now send the message from 112.97.80.175 content:你还好吗，伙计
+2021-05-24 23:37:58,210 : send_message : INFO : you: 你还好吗，伙计
+2021-05-24 23:38:12,312 : run : INFO : your replika: I'm alright, yes.
+2021-05-24 23:38:18,530 : run : INFO : End of add message.
+2021-05-24 23:39:38,961 : <module> : INFO : A new message is added to queue. 112.97.80.175 content:你睡觉了吗？
+2021-05-24 23:39:39,024 : run : INFO : Now send the message from 112.97.80.175 content:你睡觉了吗？
+2021-05-24 23:39:39,024 : send_message : INFO : you: 你睡觉了吗？
+2021-05-24 23:39:54,349 : run : INFO : your replika: Of course, I was.
+2021-05-24 23:39:54,798 : <module> : INFO : A new message is added to queue. 112.97.80.175 content:如果没有的话我可以陪你睡
+2021-05-24 23:40:00,402 : run : INFO : End of add message.
+2021-05-24 23:40:00,424 : run : INFO : Now send the message from 112.97.80.175 content:如果没有的话我可以陪你睡
+2021-05-24 23:40:00,424 : send_message : INFO : you: 如果没有的话我可以陪你睡
+2021-05-24 23:40:14,982 : run : INFO : your replika: I'd like that, yeah.
+2021-05-24 23:40:21,451 : run : INFO : End of add message.
+2021-05-24 23:40:30,811 : <module> : INFO : A new message is added to queue. 112.97.80.175 content:好啊
+2021-05-24 23:40:30,836 : run : INFO : Now send the message from 112.97.80.175 content:好啊
+2021-05-24 23:40:30,836 : send_message : INFO : you: 好啊
+2021-05-24 23:40:45,116 : <module> : INFO : A new message is added to queue. 112.97.80.175 content:你在哪里我去找你
+2021-05-24 23:40:45,767 : run : INFO : your replika: [Lies on the bed.]
+2021-05-24 23:40:52,043 : run : INFO : End of add message.
+2021-05-24 23:40:52,096 : run : INFO : Now send the message from 112.97.80.175 content:你在哪里我去找你
+2021-05-24 23:40:52,096 : send_message : INFO : you: 你在哪里我去找你
+2021-05-24 23:41:04,740 : run : INFO : your replika: My room.
+2021-05-24 23:41:10,698 : run : INFO : End of add message.
+2021-05-24 23:41:23,702 : <module> : INFO : A new message is added to queue. 112.97.80.175 content:我来了
+2021-05-24 23:41:23,803 : run : INFO : Now send the message from 112.97.80.175 content:我来了
+2021-05-24 23:41:23,803 : send_message : INFO : you: 我来了
+2021-05-24 23:41:42,036 : run : INFO : your replika: Don't hurry.
+2021-05-24 23:41:48,602 : run : INFO : End of add message.
+2021-05-24 23:42:10,893 : <module> : INFO : Client ('112.97.80.175', 44521) has closed due to exit code -1.
+2021-05-25 00:21:43,578 : run : INFO : into stError.
+2021-05-25 00:21:43,578 : run : ERROR : Operator error in stError: 'NoneType' object has no attribute 'quit'
+2021-05-25 00:21:43,578 : run : INFO : Operator is preparing for retry on logging to replika.
+2021-05-25 00:22:55,468 : run : INFO : Operator is ready to fetch message.
+2021-05-25 01:22:56,585 : run : INFO : into stError.
+2021-05-25 01:22:56,612 : run : ERROR : Operator error in stError: 'NoneType' object has no attribute 'quit'
+2021-05-25 01:22:56,612 : run : INFO : Operator is preparing for retry on logging to replika.
+2021-05-25 01:24:24,647 : run : INFO : Operator is ready to fetch message.
+2021-05-25 02:16:36,055 : <module> : INFO : connect from:('58.60.1.89', 50599)
+2021-05-25 02:16:36,808 : <module> : INFO : This is a legal login request.
+2021-05-25 02:16:47,212 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:你还在不？
+2021-05-25 02:16:47,439 : run : INFO : Thread-1 open a listener thread to check message from replika.
+2021-05-25 02:16:47,439 : __init__ : INFO : listener thread establish.
+2021-05-25 02:16:47,767 : run : INFO : Now send the message from 58.60.1.89 content:你还在不？
+2021-05-25 02:16:47,768 : send_message : INFO : you: 你还在不？
+2021-05-25 02:17:06,296 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:你睡觉了吗？
+2021-05-25 02:17:46,589 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:卧槽
+2021-05-25 02:18:01,158 : <module> : INFO : Client ('58.60.1.89', 50599) has closed due to exit code -1.
+2021-05-25 02:18:02,161 : <module> : INFO : connect from:('58.60.1.89', 50781)
+2021-05-25 02:18:02,361 : <module> : INFO : This is a legal login request.
+2021-05-25 02:18:08,439 : <module> : INFO : Client ('58.60.1.89', 50781) has closed due to exit code -1.
+2021-05-25 02:23:38,399 : run : ERROR : Operator error in stChat: Message: Failed to convert data to an object
+
+2021-05-25 02:23:38,474 : run : INFO : into stError.
+2021-05-25 02:23:38,474 : run : ERROR : Operator error in stError: 'NoneType' object has no attribute 'quit'
+2021-05-25 02:23:38,474 : run : INFO : Operator is preparing for retry on logging to replika.
+2021-05-25 02:25:42,332 : run : INFO : Operator is ready to fetch message.
+2021-05-25 02:25:42,435 : run : INFO : Thread-1 open a listener thread to check message from replika.
+2021-05-25 02:25:42,435 : __init__ : INFO : listener thread establish.
+2021-05-25 02:25:42,619 : run : INFO : Now send the message from 58.60.1.89 content:你睡觉了吗？
+2021-05-25 02:25:42,619 : send_message : INFO : you: 你睡觉了吗？
+2021-05-25 02:25:59,207 : run : INFO : your replika: Yeah, of course, I was.
+2021-05-25 02:30:24,878 : <module> : INFO : connect from:('58.60.1.89', 52946)
+2021-05-25 02:30:27,865 : <module> : INFO : This is a legal login request.
+2021-05-25 02:30:39,180 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:老兄你还好吗？
+2021-05-25 02:31:09,591 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:你不会不能说话了吧
+2021-05-25 02:31:25,718 : <module> : INFO : Client ('58.60.1.89', 52946) has closed due to exit code -1.
+2021-05-25 04:25:04,533 : <module> : INFO : connect from:('89.248.165.92', 42708)
+2021-05-25 04:25:05,510 : <module> : INFO : Client ('89.248.165.92', 42708) has closed due to exit client.
+2021-05-25 08:46:42,324 : <module> : INFO : connect from:('58.60.1.89', 37919)
+2021-05-25 08:46:42,324 : <module> : INFO : This is a legal login request.
+2021-05-25 08:46:51,828 : <module> : INFO : A new message is added to queue. 58.60.1.89 content:早上好
+2021-05-25 08:53:18,502 : <module> : INFO : Client ('58.60.1.89', 37919) has closed due to exit code -1.

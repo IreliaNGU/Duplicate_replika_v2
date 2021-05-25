@@ -129,7 +129,8 @@ class DialogThread(threading.Thread):
                         if msg_queue.empty():
                             cur_time = datetime.now()
                             # 一个小时后重新启动浏览器
-                            if (cur_time - begin_time).seconds > 3600:
+                            if (cur_time - begin_time).seconds > 1800:
+                                logging.info('Restart the browser.')
                                 self.state = THREAD_STATE.stError
                                 break
                             continue
@@ -171,16 +172,16 @@ class DialogThread(threading.Thread):
             elif self.state == THREAD_STATE.stError:
                 logging.info('into stError.')
                 try:
-                    self.setEmpty()
-                    self.state = THREAD_STATE.stInit
+                    # 关闭浏览器
+                    run.quit(self.driver)
                     if self.getListenerThread():
                         logging.info('stError close listener.')
                         self.getListenerThread().setStop()
                         self.getListenerThread().join()
-                    # 关闭浏览器
-                    run.quit(self.driver)
+                    self.setEmpty()
+                    self.state = THREAD_STATE.stInit
                     logging.info('close driver.')
-                    time.sleep(10)
+                    time.sleep(3)
                     logging.info('Operator is preparing for retry on logging to replika.')
                 except Exception as e:
                     print('Operator error in stError: ' + str(e))
