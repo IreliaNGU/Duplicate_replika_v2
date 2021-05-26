@@ -61,8 +61,15 @@ def send_message(driver, msg):
                 time.sleep(1)
             except:
                 logging.info('Auch.')
-                return -1
-
+                driver.save_screenshot('inputfield2.png')
+                try:
+                    choose2 = driver.find_element_by_xpath('//*[@class="sc-AxjAm ChatLayout__StatsButton-ztbuvw-8 bdwgCY"]')
+                    choose2.click()
+                    logging.info('13')
+                    time.sleep(1)
+                except Exception as e:
+                    logging.info('Suck.' + str(e))
+                    return -1
     try:
         logging.info('5')
         time.sleep(1)
@@ -75,7 +82,6 @@ def send_message(driver, msg):
             except Exception as e:
                 logging.info('8')
                 logging.info('1' + str(e))
-                print(e)
         logging.info('9')
         inputfield.send_keys(zh_send)
         logging.info('10')
@@ -84,8 +90,7 @@ def send_message(driver, msg):
         return 0
     except Exception as e:
         logging.info('12')
-        print(e)
-        logging.info('2' + str(e))
+        logging.info('2 ' + str(e))
         return -1
 
 
@@ -159,7 +164,6 @@ class Listener_Thread(threading.Thread):
                                 break
                         if msg_text != '':
                             zh_follow = baidu_translate_English_to_Chinese(msg_text.strip('%%'))
-                            print(zh_follow)
                             chat_log.write("replika: " + str(msg_text).replace("%%", ""))
                             chat_log.write(" 翻译：" + str(zh_follow).replace("%%", "") + "\n")
                             if self.clientsock:
@@ -174,11 +178,9 @@ class Listener_Thread(threading.Thread):
                     add_flag = 0
                     record_last = msg_last
                     msg_from_AI = msg_last.find_element_by_xpath('./div/div/div[2]/div/span/span/span').text
-                    print('your replika: ' + str(msg_from_AI))
                     logging.info('your replika: ' + str(msg_from_AI))
                     zh_msg = baidu_translate_English_to_Chinese(str(msg_from_AI))
                     if zh_msg:
-                        print(str(zh_msg))
                         chat_log.write(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) +
                                        " replika: " + str(msg_from_AI) + " 翻译: " + str(zh_msg) + "\n")
                         if self.clientsock:
@@ -188,9 +190,6 @@ class Listener_Thread(threading.Thread):
                                 logging.error("clientsock send fail.")
                         else:
                             logging.error('No clientsock.')
-                        # time_str = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-                        # log.write(time_str + "AI: " + str(msg_from_AI) + " " + str(zh_msg))
-
             except Exception as e:
                 print("unable to locate replika's last message.")
             time.sleep(3)
@@ -244,7 +243,6 @@ def fetch_history(driver):
         if x == '|' and i != len(zh_list) - 1 and zh_list[i + 1] != ' ':
             zh_list.insert(i + 1, ' ')
     zh_send_after = ''.join(zh_list)
-    print(str(zh_send_after))
     return zh_send_after
 
 
